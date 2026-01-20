@@ -7,6 +7,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 # from webdriver_manager.drivers.chrome import ChromeDriver
 from selenium.webdriver.chrome.service import Service
+from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 
@@ -54,23 +55,28 @@ def browser(driver):
 
 
 @pytest.fixture(scope="function")
-def new_browser():
+def with_new_browser():
 
-    future_browser = ...
+    browsers = []
 
-    def new_browser():
-        nonlocal future_browser
-        future_browser = Browser(
-            Config(
-                driver=webdriver.Chrome(
-                    service=Service(ChromeDriverManager().install())
-                ),
-                base_url="https://todomvc.com/examples/emberjs/todomvc/dist"
-            )
-        )
-        return future_browser
+    def new_browser(name='chrome'):
+        if name == 'chrome':
+            browser = (Browser(
+                Config(
+                    driver=webdriver.Chrome(service=Service(ChromeDriverManager().install())), base_url="https://todomvc.com/examples/emberjs/todomvc/dist")))
+            browsers.append(browser)
+        elif name == 'edge':
+            browser = (Browser(
+                Config(
+                    driver=webdriver.Edge(service=Service(EdgeChromiumDriverManager().install())), base_url="https://todomvc.com/examples/emberjs/todomvc/dist")))
+        elif name == 'firefox':
+            browser = (Browser(
+                Config(driver = webdriver.Firefox(service=Service(GeckoDriverManager().install())), base_url="https://todomvc.com/examples/emberjs/todomvc/dist")))
+        else:
+            raise Exception(f"Browser: {name} is not supported! Please use 'chrome', 'firefox' or 'edge' values")
+        return browser
 
     yield new_browser
 
-    if future_browser is not ...:
-        future_browser.quit()
+    for browser_entity in browsers:
+        browser_entity.quit()

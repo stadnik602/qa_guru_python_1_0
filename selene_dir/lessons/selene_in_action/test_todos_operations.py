@@ -39,50 +39,53 @@ def test_complete_todo():
     WebDriverWait(driver=browser.driver, timeout=3.0).until(lambda driver: driver.find_elements(*by.css(".todo-list>li")))
     '''
 
-def test_todos_storage_is_not_shared_between_browsers(new_browser):
+def test_todos_storage_is_not_shared_between_browsers(with_new_browser):
     browser.open("/")
     input_element.type("a").press_enter()
     input_element.type("b").press_enter()
     input_element.type("c").press_enter()
     todo_list_elements.should(have.exact_texts('a', 'b', 'c'))
 
-    browser2 = new_browser()
+    browser2 = with_new_browser('firefox')
     browser2.open("/")
     browser2.element(".new-todo").type("p").press_enter()
     browser2.all(".todo-list>li").should(have.exact_texts('p'))
     browser.all(".todo-list>li").should(have.exact_texts('a', 'b', 'c'))
-    print()
 
+    browser3 = with_new_browser('chrome')
+    browser3.open("/")
+    browser3.element(".new-todo").type("q").press_enter()
+    browser3.all(".todo-list>li").should(have.exact_texts("q"))
+    browser.all(".todo-list>li").should(have.exact_texts("a", "b", "c"))
 
-# def test_add_todos_and_complete_one():
-#     browser.open("/")
-#     if browser.wait_until( have.title_containing('TodoMVCC')):
-#         print('Yahoo!!! The title is correct')
-#     else:
-#         print('The title is WRONG')
-#     input_element.type("a").press_enter()
-#     input_element.type("b").press_enter()
-#     input_element.type("c").press_enter()
-#     input_element.type("d").press_enter()
-#     todo_list_elements.should(have.exact_texts('a', 'b', 'c', 'd'))
+    # def test_add_todos_and_complete_one():
+    #     browser.open("/")
+    #     if browser.wait_until( have.title_containing('TodoMVCC')):
+    #         print('Yahoo!!! The title is correct')
+    #     else:
+    #         print('The title is WRONG')
+    #     input_element.type("a").press_enter()
+    #     input_element.type("b").press_enter()
+    #     input_element.type("c").press_enter()
+    #     input_element.type("d").press_enter()
+    #     todo_list_elements.should(have.exact_texts('a', 'b', 'c', 'd'))
 
-
-# def test_test_complete_todo(driver, browser):
-#     driver.get("https://todomvc.com/examples/emberjs/todomvc/dist")
-#     browser.element("#new-todo").should(have.attribute("value").value(""))
-#     browser.element("#new-todo").perform(command.select_all)
-#     browser.element("#new-todo").perform(command.drag_and_drop_by_offset(3, 4))
-#     browser.element("#new-todo").perform(command.js.click)
-#     browser.element("#new-todo").perform(command.js.type("123"))
-#     browser.element("#new-todo").with_(click_by_js=True).click()
-#     initial_value = browser.element('#new-todo').get(query.attribute('value')) == ''
-#     initial_value2 = browser.element('#new-todo').locate().get_attribute('value') == ''
-#     browser.element('#new-todo').send_keys('a' + Keys.ENTER)
-#     driver.find_elements(*by.css('#new-todo')).send_keys('b' + Keys.ENTER)
-#     driver.find_elements(*by.css('#new-todo')).send_keys('c' + Keys.ENTER)
-#
-#     assert initial_value == browser.element('#new-todo').get(query.attribute('value')) == ''
-#
+    # def test_test_complete_todo(driver, browser):
+    #     driver.get("https://todomvc.com/examples/emberjs/todomvc/dist")
+    #     browser.element("#new-todo").should(have.attribute("value").value(""))
+    #     browser.element("#new-todo").perform(command.select_all)
+    #     browser.element("#new-todo").perform(command.drag_and_drop_by_offset(3, 4))
+    #     browser.element("#new-todo").perform(command.js.click)
+    #     browser.element("#new-todo").perform(command.js.type("123"))
+    #     browser.element("#new-todo").with_(click_by_js=True).click()
+    #     initial_value = browser.element('#new-todo').get(query.attribute('value')) == ''
+    #     initial_value2 = browser.element('#new-todo').locate().get_attribute('value') == ''
+    #     browser.element('#new-todo').send_keys('a' + Keys.ENTER)
+    #     driver.find_elements(*by.css('#new-todo')).send_keys('b' + Keys.ENTER)
+    #     driver.find_elements(*by.css('#new-todo')).send_keys('c' + Keys.ENTER)
+    #
+    #     assert initial_value == browser.element('#new-todo').get(query.attribute('value')) == ''
+    #
     """
 # Other Examples
     # to make all clicks be performed via JavaScript
