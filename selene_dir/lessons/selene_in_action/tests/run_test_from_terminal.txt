@@ -1,0 +1,1 @@
+env -S 'selene.base_url=https://todomvc4tasj.herokuapp.com/ selene.window_width=600 selene.window_height=600' pytest selene_dir/lessons
