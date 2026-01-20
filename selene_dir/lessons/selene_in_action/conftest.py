@@ -1,11 +1,10 @@
 import os
+from typing import Literal
 
 import pytest
 from selene import browser as selene_browser, Browser, Config
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
-
-# from webdriver_manager.drivers.chrome import ChromeDriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
@@ -53,6 +52,7 @@ def browser(driver):
 
     yield Browser(Config(driver=driver))
 
+SupportedBrowsers = Literal['chrome', 'firefox', 'edge']
 
 @pytest.fixture(scope="function")
 def with_new_browser():
@@ -68,7 +68,7 @@ def with_new_browser():
         elif name == 'edge':
             browser = (Browser(
                 Config(
-                    driver=webdriver.Edge(service=Service(EdgeChromiumDriverManager().install())), base_url="https://todomvc.com/examples/emberjs/todomvc/dist")))
+                    driver=webdriver.Edge(), base_url="https://todomvc.com/examples/emberjs/todomvc/dist")))
         elif name == 'firefox':
             browser = (Browser(
                 Config(driver = webdriver.Firefox(service=Service(GeckoDriverManager().install())), base_url="https://todomvc.com/examples/emberjs/todomvc/dist")))

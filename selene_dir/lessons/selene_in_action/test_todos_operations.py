@@ -1,5 +1,7 @@
+from typing import Callable, Optional
+from .conftest import SupportedBrowsers
 import pytest
-from selene import browser, have, be, query, command
+from selene import browser, have, be, query, command, Browser
 from selenium.webdriver import Keys
 from selenium.webdriver.common import by
 # from selenium.webdriver.support.wait import WebDriverWait
@@ -39,20 +41,22 @@ def test_complete_todo():
     WebDriverWait(driver=browser.driver, timeout=3.0).until(lambda driver: driver.find_elements(*by.css(".todo-list>li")))
     '''
 
-def test_todos_storage_is_not_shared_between_browsers(with_new_browser):
+def test_todos_storage_is_not_shared_between_browsers(
+        with_new_browser: Callable[[Optional [SupportedBrowsers]], Browser] | Callable[..., Browser]
+):
     browser.open("/")
     input_element.type("a").press_enter()
     input_element.type("b").press_enter()
     input_element.type("c").press_enter()
     todo_list_elements.should(have.exact_texts('a', 'b', 'c'))
 
-    browser2 = with_new_browser('firefox')
+    browser2 = with_new_browser()
     browser2.open("/")
     browser2.element(".new-todo").type("p").press_enter()
     browser2.all(".todo-list>li").should(have.exact_texts('p'))
     browser.all(".todo-list>li").should(have.exact_texts('a', 'b', 'c'))
 
-    browser3 = with_new_browser('chrome')
+    browser3 = with_new_browser('firefox')
     browser3.open("/")
     browser3.element(".new-todo").type("q").press_enter()
     browser3.all(".todo-list>li").should(have.exact_texts("q"))
