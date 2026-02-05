@@ -190,7 +190,8 @@ def find_registration_button_on_login_page(page_url, button_text):
 
 def even_more_readable_name(func, **kwargs):
     func_name = func.__name__.replace('_', ' ').title()
-    args_name = ", ".join(key + "=" + kwargs[key] for key in kwargs.keys())
+    args_name = (", ".join(key + "=" + value for key, value in kwargs.items()))
+        # ", ".join(key + "=" + kwargs[key] for key in kwargs.keys()))
     return f"{func_name} [{args_name}]"
 
 def find_registration_button_on_login_page_2(page_url, button_text):
