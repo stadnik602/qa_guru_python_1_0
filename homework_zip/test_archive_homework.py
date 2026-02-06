@@ -9,8 +9,8 @@ from openpyxl import load_workbook
 
 
 def get_current_file_path():
-    CURRENT_FILE = os.path.abspath(__file__)
-    return CURRENT_FILE
+    current_file = os.path.abspath(__file__)
+    return current_file
 
 def get_current_dir_path():
     current_dir = os.path.dirname(get_current_file_path())
