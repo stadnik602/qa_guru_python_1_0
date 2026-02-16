@@ -66,7 +66,7 @@ def test_successes_submit_form():
     choose_picture_button.send_keys(DIR_PATH+"/robert.webp")
     current_address_input.type('202-2 Dunsheath Way')
     state_input.click()
-    browser.all('[id ^="react-select"][role="option"]').element_by(have.text('NCR')).click()
+    browser.all('[id ^= "react-select"][id *= "option"]').element_by(have.text('NCR')).click()
     # state_input.send_keys('N').press_enter()
     city_input.send_keys('no').press_enter()
     submit_button.click()
