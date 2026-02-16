@@ -17,6 +17,8 @@ current_address_input = browser.element('#currentAddress')
 choose_picture_button = browser.element('#uploadPicture')
 state_input = browser.element('#react-select-3-input')
 city_input = browser.element('#react-select-4-input')
+state_dropdown_elements = browser.all('[id ^= "react-select"][id *= "option"]')
+city_dropdown_elements = browser.all('[id ^= "react-select"][id *= "option"]')
 
 submit_button = browser.element('#submit')
 
@@ -56,19 +58,23 @@ def test_successes_submit_form():
     gender_radiobuttons_2.get('Male').click()
     mobile_field.type('1234567890')
     date_of_birth_field.click()
-    datepicker.get('year_dropdown').click()
-    browser.element('[value="2021"]').click()
-    datepicker.get('month_dropdown').click()
-    browser.element('[value="3"]').click()
-    browser.element('.react-datepicker__day--019').click()
+    datepicker.get('year_dropdown').send_keys('2022')
+    # datepicker.get('year_dropdown').click()
+    # browser.element('[value="2021"]').click()
+    datepicker.get('month_dropdown').send_keys('April')
+    # datepicker.get('month_dropdown').click()
+    # browser.element('[value="3"]').click()
+    browser.element('day--019').click()
     subject_input.send_keys('Com').press_enter()
     hobbies_checkboxes.get('Music').click()
     choose_picture_button.send_keys(DIR_PATH+"/robert.webp")
     current_address_input.type('202-2 Dunsheath Way')
     state_input.click()
-    browser.all('[id ^= "react-select"][id *= "option"]').element_by(have.text('NCR')).click()
+    state_dropdown_elements.element_by(have.text('NCR')).click()
     # state_input.send_keys('N').press_enter()
-    city_input.send_keys('no').press_enter()
+    city_input.click()
+    city_dropdown_elements.element_by(have.text('Noida')).click()
+    # city_input.send_keys('no').press_enter()
     submit_button.click()
 
 # Then
@@ -79,9 +85,9 @@ def test_successes_submit_form():
         have.texts(
             'Kurva Bobr',
             'kurvabobr@gmail.com',
-            'Female',
+            'Male',
             '1234567890',
-            '19 April,2021',
+            '19 April,2022',
             'Computer Science',
             'Music',
             'robert.webp',
