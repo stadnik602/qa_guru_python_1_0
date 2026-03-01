@@ -1,6 +1,6 @@
 import os
 
-from selene import browser, be, have
+from selene import browser, be, have, command
 
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -59,29 +59,59 @@ def test_successes_submit_form():
     mobile_field.type('1234567890')
     date_of_birth_field.click()
     datepicker.get('year_dropdown').send_keys('2022')
-    # datepicker.get('year_dropdown').click()
-    # browser.element('[value="2021"]').click()
     datepicker.get('month_dropdown').send_keys('April')
-    # datepicker.get('month_dropdown').click()
-    # browser.element('[value="3"]').click()
-    browser.element('day--019').click()
+    browser.element('.react-datepicker__day--019').click()
     subject_input.send_keys('Com').press_enter()
     hobbies_checkboxes.get('Music').click()
-    choose_picture_button.send_keys(DIR_PATH+"/robert.webp")
+    # choose_picture_button.send_value(os.path.abspath(os.path.join(os.path.dirname(tests.__file__),"resources/robert.webp")))
+    choose_picture_button.send_keys(DIR_PATH+"/resources/robert.webp")
     current_address_input.type('202-2 Dunsheath Way')
+    '''    current_address_input.with_(set_value_by_js=True).set_value('202-2 Dunsheath Way')
+    current_address_input.perform(command.js.set_value('202-2 Dunsheath Way'))'''
+    state_input.perform(command.js.scroll_into_view)
+
+    state_input.perform(command.js.click)
     state_input.click()
-    state_dropdown_elements.element_by(have.text('NCR')).click()
-    # state_input.send_keys('N').press_enter()
+    # state_dropdown_elements.element_by(have.text('NCR')).click()
     city_input.click()
     city_dropdown_elements.element_by(have.text('Noida')).click()
-    # city_input.send_keys('no').press_enter()
+
+    submit_button.perform(command.js.scroll_into_view)
     submit_button.click()
 
-# Then
+    # Then
     browser.element(confirmation_popup_title_element).should(be.visible)
     browser.element(confirmation_popup_title_element).should(have.exact_text('Thanks for submitting the form'))
-    print()
-    browser.all('.table-responsive td:nth-child(2)').should(
+    browser.element(confirmation_popup_title_element).should(have.exact_text('Thanks for submitting the form'))
+    '''browser.element('.table').all('td').even.should(
+        have.texts(
+            'Kurva Bobr',
+            'kurvabobr@gmail.com',
+            'Male',
+            '1234567890',
+            '19 April,2022',
+            'Computer Science',
+            'Music',
+            'robert.webp',
+            '202-2 Dunsheath Way',
+            'NCR Noida',
+        ))'''
+    browser.all('.table').all('td').should(
+        have.texts(
+            ('Student Name', 'Kurva Bobr'),
+            ('Student Email','kurvabobr@gmail.com'),
+            ('Gender','Male'),
+            ('Mobile','1234567890'),
+             ('Date of Birth','19 April,2022'),
+              ('Subjects','Computer Science'),
+               ('Hobbies','Music'),
+                ('Picture','robert.webp'),
+                 ('Address','202-2 Dunsheath Way'),
+                  ('State and City','NCR Noida')
+        )
+    )
+
+'''    browser.all('.table td:nth-child(2)').should(
         have.texts(
             'Kurva Bobr',
             'kurvabobr@gmail.com',
@@ -94,4 +124,4 @@ def test_successes_submit_form():
             '202-2 Dunsheath Way',
             'NCR Noida'
         )
-    )
+    )'''
